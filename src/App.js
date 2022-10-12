@@ -1,24 +1,31 @@
-import logo from './logo.svg';
-import './App.css';
+import Login from "./pages/login/Login";
+import "antd/dist/antd.css";
+import Main from "./pages/main/Main";
+import { useContext } from "react";
+import { userContext } from "./context/UserContext";
+import {   Routes, Route } from "react-router-dom";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+  const { user, setUser } = useContext(userContext);
+  
+  return user ? (
+    <div
+      style={{
+        maxWidth: "1140px",
+        width: "100%",
+        padding: "0 20px",
+        margin: "0 auto",
+      }}
+    >
+      <Main />
     </div>
+  ) : (
+    <>
+      <Routes>
+        <Route path="/login" element={<Login />} exact />
+        <Route path="*" element={<Login />} />
+      </Routes>
+    </>
   );
 }
 
