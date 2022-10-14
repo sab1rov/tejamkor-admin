@@ -15,7 +15,7 @@ import React, { useEffect, useState } from "react";
 import { $authHost } from "../../http";
 
 const initialValue = {
-  isOk: true,
+  isNew: true,
   name: "",
   name_ru: "",
   logo: "https://sdb-storage.s3.us-east-2.amazonaws.com/tejamkor/88d34863-6332-4eb9-9e5c-4c8d15529047-logo-horizontal2-1.png",
@@ -35,7 +35,7 @@ function Company() {
   const [data, setData] = useState([]);
   const [inputValue, setInputValue] = useState(initialValue);
   const [open, setOpen] = useState(false);
-  const [refresh, setRefresh] = useState(false)
+  const [refresh, setRefresh] = useState(false);
   const [id, setId] = useState(null);
 
   const onClose = () => {
@@ -96,27 +96,50 @@ function Company() {
     setInputValue({ ...inputValue, [e.target.name]: e.target.value });
   };
 
-  const editItem = () => {
+  const handleAddress = (e) => {
+    setInputValue({...inputValue, address: e.target.value})
+  }
 
+  const editItem = (item) => {
+    setId(item.id);
+    setInputValue({
+      isNew: false,
+      name: item?.name,
+      name_ru: item?.name_ru,
+      logo: "https://sdb-storage.s3.us-east-2.amazonaws.com/tejamkor/88d34863-6332-4eb9-9e5c-4c8d15529047-logo-horizontal2-1.png",
+      companyFeatureTitle: item?.companyFeatureTitle,
+      companyFeatureSubTitle: item?.companyFeatureSubTitle,
+      address: item?.address,
+      address_ru: item?.address_ru,
+      phone: item?.phone,
+      instagram: item?.instagram,
+      facebook: item?.facebook,
+      telegram: item?.telegram,
+      youtube: item?.youtube,
+      counts: "asa",
+    });
+    setOpen(true);
   };
 
   const deleteItem = () => {};
 
-  const postData = async() => {
-    let res = await $authHost.post('/company', inputValue)
-    setData(res.data.data)
-    setOpen(false)
-    setInputValue(initialValue)
-    setRefresh(true)
-    if(refresh) {
-      setRefresh(!refresh)
+  const postData = async () => {
+    let res = await $authHost.post("/company", inputValue);
+    setData(res.data.data);
+    setOpen(false);
+    setInputValue(initialValue);
+    setRefresh(true);
+    if (refresh) {
+      setRefresh(!refresh);
     }
-    console.log(res, 'res');
-  }
+    console.log(res, "res");
+  };
 
-  // const patchData = () => {
+  const patchData = async () => {
+    let res = await $authHost.patch(`/company/${id}`, inputValue);
 
-  // }
+    console.log(res);
+  };
 
   const fetchData = async () => {
     let res = await $authHost.get("/company");
@@ -126,6 +149,7 @@ function Company() {
   useEffect(() => {
     fetchData();
   }, []);
+  console.log(inputValue);
 
   return (
     <div>
@@ -147,67 +171,125 @@ function Company() {
           <Space>
             <Button onClick={onClose}>Cancel</Button>
             <Button
-              onClick={postData}
+              onClick={inputValue?.isNew ? postData : patchData}
               type="primary"
             >
-              {inputValue.isOk ? "Add" : "Edit"}
+              {inputValue?.isNew ? "Add" : "Edit"}
             </Button>
           </Space>
         }
       >
         <Form layout="vertical">
-          <Form.Item label="Name">
+          <Form.Item
+            label="Name"
+            name="name"
+            rules={[
+              {
+                required: true,
+                // message: "Please input!",
+              },
+            ]}
+          >
             <Input
               placeholder="input placeholder"
-              name="name"
+              // name="name"
               value={inputValue.name}
               onChange={handleChange}
             />
           </Form.Item>
-          <Form.Item label="Name Ru">
+          <Form.Item
+            label="Name Ru"
+            name="name ru"
+            rules={[
+              {
+                required: true,
+                message: "Please input!",
+              },
+            ]}
+          >
             <Input
               placeholder="input placeholder"
-              name="name_ru"
+              name="name ru"
               value={inputValue.name_ru}
               onChange={handleChange}
             />
           </Form.Item>
-          <Form.Item label="Address">
+          <Form.Item
+            label="Address"
+            name="address"
+            rules={[
+              {
+                required: true,
+                message: "Please input!",
+              },
+            ]}
+          >
             <Input
               placeholder="address"
-              name="address"
               value={inputValue.address}
-              onChange={handleChange}
+              onChange={handleAddress}
             />
           </Form.Item>
-          <Form.Item label="Address Ru">
+          <Form.Item
+            label="Address Ru"
+            name="address_ru"
+            rules={[
+              {
+                required: true,
+                message: "Please input your username!",
+              },
+            ]}
+          >
             <Input
               placeholder="address ru"
-              name="address_ru"
               value={inputValue.address_ru}
               onChange={handleChange}
             />
           </Form.Item>
-          <Form.Item label="Company Featue Title">
+          <Form.Item
+            label="Company Featue Title"
+            name="companyFeatureTitle"
+            rules={[
+              {
+                required: true,
+                message: "Please input your username!",
+              },
+            ]}
+          >
             <Input
               placeholder="feature title"
-              name="companyFeatureTitle"
               value={inputValue.companyFeatureTitle}
               onChange={handleChange}
             />
           </Form.Item>
-          <Form.Item label="Company Featue Subtitle">
+          <Form.Item
+            label="Company Featue Subtitle"
+            name="companyFeatureSubTitle"
+            rules={[
+              {
+                required: true,
+                message: "Please input your username!",
+              },
+            ]}
+          >
             <Input
               placeholder="feature subtitle"
-              name="companyFeatureSubTitle"
               value={inputValue.companyFeatureSubTitle}
               onChange={handleChange}
             />
           </Form.Item>
-          <Form.Item label="Phone number">
+          <Form.Item
+            label="Phone number"
+            name="phone"
+            rules={[
+              {
+                required: true,
+                message: "Please input your username!",
+              },
+            ]}
+          >
             <Input
               placeholder="number"
-              name="phone"
               value={inputValue.phone}
               onChange={handleChange}
             />
@@ -216,40 +298,72 @@ function Company() {
         <Form>
           <Row>
             <Col span={12}>
-              <Form.Item label="Instagram">
+              <Form.Item
+                label="Instagram"
+                name="instagram"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input your username!",
+                  },
+                ]}
+              >
                 <Input
                   placeholder="insta link"
-                  name="instagram"
                   value={inputValue.instagram}
                   onChange={handleChange}
                 />
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item label="Telegram">
+              <Form.Item
+                label="Telegram"
+                name="telegram"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input your username!",
+                  },
+                ]}
+              >
                 <Input
                   placeholder="telegram link"
-                  name="telegram"
                   value={inputValue.telegram}
                   onChange={handleChange}
                 />
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item label="Facebook">
+              <Form.Item
+                label="Facebook"
+                name="facebook"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input your username!",
+                  },
+                ]}
+              >
                 <Input
                   placeholder="facebook link"
-                  name="facebook"
                   value={inputValue.facebook}
                   onChange={handleChange}
                 />
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item label="YouTube">
+              <Form.Item
+                label="YouTube"
+                name="youtube"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input your username!",
+                  },
+                ]}
+              >
                 <Input
                   placeholder="youtube link"
-                  name="youtube"
                   value={inputValue.youtube}
                   onChange={handleChange}
                 />

@@ -38,7 +38,8 @@ $authHost.interceptors.response.use((response) => {
         id,
       })
       .then((res) => {
-        if (res.data.status === 200) {
+        console.log(res);
+        if (res.data.code === 200) {
           localStorage.setItem("accessToken", res.data.data.accessToken);
           console.log("Access token refreshed!");
           return $authHost(originalRequest);
