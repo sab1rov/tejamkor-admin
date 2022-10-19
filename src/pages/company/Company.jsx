@@ -96,6 +96,10 @@ function Company() {
     setInputValue({ ...inputValue, [e.target.name]: e.target.value });
   };
 
+  const f = () => {
+
+  }
+
   const handleAddress = (e) => {
     setInputValue({...inputValue, address: e.target.value})
   }
@@ -119,6 +123,7 @@ function Company() {
       counts: "asa",
     });
     setOpen(true);
+    // setData(inputValue)
   };
 
   const deleteItem = () => {};

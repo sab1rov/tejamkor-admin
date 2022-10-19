@@ -5,6 +5,10 @@ export const $authHost = axios.create({
   baseURL: `${domain}`,
 });
 
+export const $mediaApi = axios.create({
+  baseURL: "https://media-api.main-gate.appx.uz",
+})
+
 $authHost.interceptors.request.use(
   (config) => {
     const accessToken = localStorage.getItem("accessToken");
