@@ -90,7 +90,7 @@ function News() {
     <>
       <PageHeader
         className="site-page-header"
-        extra={[<Button onClick={() => setOpen(true)}>Add</Button>]}
+        extra={[<Button key="1" onClick={() => setOpen(true)}>Add</Button>]}
       />
       <NewsDrawer
         open={open}
