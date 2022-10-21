@@ -1,28 +1,35 @@
-import React, { useState } from "react";
-import { Button, Col, DatePicker, Drawer, Form, Input, Row, Tabs } from "antd";
+import React, { useEffect } from "react";
+import { Button, Col, DatePicker, Drawer, Form, Input, Tabs } from "antd";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { $authHost } from "../../http";
 import MediaUpload from "../MediaUpload";
+import moment from "moment";
 
-function NewsDrawer({ open, setOpen }) {
+function NewsDrawer({ open, setOpen, editingData, getData }) {
   const [form] = Form.useForm();
-  const [data, setData] = useState({});
 
-  const dateChange = (date, dateString) => {};
+  const postData = async (values) => {
+    await $authHost.post("/news", values);
+    setOpen(false);
+    getData();
+  };
 
-  const postData = async () => {
-    await $authHost.post("/news", data);
+  const editData = async (values) => {
+    let id = editingData.id;
+    await $authHost.patch(`/news/${id}`, values);
+    setOpen(false);
+    getData();
   };
 
   const onFinish = async (values) => {
     values.date = values["date"].format("YYYY-MM-DD");
-    setData(values);
-    postData();
+    editingData ? editData(values) : postData(values);
   };
 
   const onClose = () => {
     setOpen(false);
+    form.resetFields();
   };
 
   const TabOne = () => {
@@ -114,66 +121,41 @@ function NewsDrawer({ open, setOpen }) {
   const TabThree = () => {
     return (
       <>
-        <Row>
-          <Col span={12}>
-            <Form.Item
-              name="image"
-              label="Image"
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
-            >
-              <MediaUpload form={form} />
-            </Form.Item>
-          </Col>
-        </Row>
-        <Row>
-          <Col span={12}>
-            <Form.Item
-              name="date"
-              label="Date"
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
-            >
-              <DatePicker
-                onChange={(dateString) => {
-                  dateChange(dateString);
-                }}
-              />
-            </Form.Item>
-          </Col>
-        </Row>
-        <Row>
-          <Col span={12}>
-            <Form.Item
-              name="author"
-              label="Author"
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
-            >
-              <Input placeholder="author" />
-            </Form.Item>
-          </Col>
-        </Row>
-        <Form.Item>
-          <Button
-            htmlType="submit"
-            type="primary"
-            size="large"
-            style={{ marginTop: "20px" }}
-            block
-          >
-            Submit
-          </Button>
+        <Form.Item
+          name="image"
+          label="Image"
+          rules={[
+            {
+              required: true,
+            },
+          ]}
+        >
+          <MediaUpload form={form} />
         </Form.Item>
+        <Form.Item
+          name="date"
+          label="Date"
+          rules={[
+            {
+              required: true,
+            },
+          ]}
+        >
+          <DatePicker />
+        </Form.Item>
+        <Col span={12}>
+          <Form.Item
+            name="author"
+            label="Author"
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+          >
+            <Input placeholder="author" />
+          </Form.Item>
+        </Col>
       </>
     );
   };
@@ -196,11 +178,28 @@ function NewsDrawer({ open, setOpen }) {
     },
   ];
 
+  useEffect(() => {
+    if (Boolean(editingData)) {
+      form.setFieldsValue({ ...editingData, date: moment(editingData.date) });
+    }
+  }, [editingData]);
+
   return (
     <>
       <Drawer title="Drawer" open={open} onClose={onClose} width={600}>
         <Form form={form} onFinish={onFinish} layout="vertical">
           <Tabs items={tabItems} />
+          <Form.Item>
+            <Button
+              htmlType="submit"
+              type="primary"
+              size="large"
+              style={{ marginTop: "20px" }}
+              block
+            >
+              {editingData ? "Edit" : "Add"}
+            </Button>
+          </Form.Item>
         </Form>
       </Drawer>
     </>

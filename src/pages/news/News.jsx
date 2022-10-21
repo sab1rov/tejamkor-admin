@@ -1,11 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { Button, Image, PageHeader, Popconfirm, Space, Table } from "antd";
+import {
+  Button,
+  Form,
+  Image,
+  PageHeader,
+  Popconfirm,
+  Space,
+  Table,
+} from "antd";
 import { $authHost } from "../../http";
 import NewsDrawer from "../../components/drawers/NewsDrawer";
 
 function News() {
   const [data, setData] = useState([]);
   const [open, setOpen] = useState(false);
+  const [editingData, setEditingData] = useState(null);
 
   const columns = [
     {
@@ -36,23 +45,19 @@ function News() {
         return (
           <>
             <Space direction="vertical">
-              <Button
-                type="primary"
-                 onClick={() => editItem(item)}
-              >
+              <Button type="primary" onClick={() => editItem(item)}>
                 Edit
               </Button>
               <Popconfirm
                 title="Are you sure to delete this company"
-                // onConfirm={deleteItem}
+                onConfirm={() => deleteItem(item)}
                 okText="Yes"
                 cancelText="No"
               >
                 <Button
                   type="danger"
-                  //  onClick={setId(item.id)}
                 >
-                  O'chirish
+                  Delete
                 </Button>
               </Popconfirm>
             </Space>
@@ -67,17 +72,19 @@ function News() {
     setData(res.data.data);
   };
 
-  const editItem = () => {
-    
-  } 
+  const editItem = (item) => {
+    setEditingData(item);
+    setOpen(true);
+  };
+
+  const deleteItem = async (item) => {
+    await $authHost.delete(`/news/${item.id}`, item)
+    getData()
+  }
 
   useEffect(() => {
     getData();
   }, []);
-
-  useEffect(() => {
-
-  }, [])
 
   return (
     <>
@@ -85,7 +92,12 @@ function News() {
         className="site-page-header"
         extra={[<Button onClick={() => setOpen(true)}>Add</Button>]}
       />
-      <NewsDrawer open={open} setOpen={setOpen} />
+      <NewsDrawer
+        open={open}
+        setOpen={setOpen}
+        editingData={editingData}
+        getData={getData}
+      />
       <Table columns={columns} dataSource={data} />
     </>
   );
