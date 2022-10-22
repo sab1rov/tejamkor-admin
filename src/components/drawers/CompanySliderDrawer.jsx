@@ -1,9 +1,9 @@
 import { Button, Drawer, Form, Input, Tabs } from "antd";
-import React from "react";
+import React, { useEffect } from "react";
 import { $authHost } from "../../http";
 import MediaUpload from "../MediaUpload";
 
-function CompanySliderDrawer({ open, setOpen }) {
+function CompanySliderDrawer({ open, setOpen, editingData, getData }) {
   const [form] = Form.useForm();
 
   const onClose = () => {
@@ -13,10 +13,19 @@ function CompanySliderDrawer({ open, setOpen }) {
 
   const postData = async (values) => {
     await $authHost.post('/company/slider', values)
+    setOpen(false)
+    getData()
+  }
+
+  const editData = async (values) => {
+    let id = editingData.id
+    await $authHost.patch(`/company/slider/${id}`, values)
+    setOpen(false)
+    getData()
   }
 
   const onFinish = async (values) => {
-    postData  (values);
+    editingData ? editData(values) : postData(values)
   };
 
   const TabOne = () => {
@@ -112,6 +121,12 @@ function CompanySliderDrawer({ open, setOpen }) {
     },
   ];
 
+  useEffect(() => {
+    if(Boolean(editingData)) {
+      form.setFieldsValue({...editingData, title: editingData.title})
+    }
+  }, [editingData])
+
   return (
     <>
       <Drawer title="Drawer" onClose={onClose} open={open} width={600}>
@@ -119,7 +134,7 @@ function CompanySliderDrawer({ open, setOpen }) {
           <Tabs items={tabItem} />
           <Form.Item>
             <Button htmlType="submit" type="primary" size="large" block>
-              Submit
+              {editingData ? "Edit" : "Add"}
             </Button>
           </Form.Item>
         </Form>

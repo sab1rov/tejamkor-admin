@@ -1,11 +1,4 @@
-import {
-  Button,
-  Image,
-  PageHeader,
-  Popconfirm,
-  Space,
-  Table,
-} from "antd";
+import { Button, Image, PageHeader, Popconfirm, Space, Table } from "antd";
 import React, { useEffect, useState } from "react";
 import CompanySliderDrawer from "../../components/drawers/CompanySliderDrawer";
 import { $authHost } from "../../http";
@@ -13,6 +6,7 @@ import { $authHost } from "../../http";
 function CompanySlider() {
   const [data, setData] = useState([]);
   const [open, setOpen] = useState(false);
+  const [editingData, setEditingData] = useState(null);
 
   const tableColumns = [
     {
@@ -30,6 +24,9 @@ function CompanySlider() {
       key: 2,
       title: "Subtitle",
       dataIndex: "subtitle",
+      render: (item) => {
+        return <p>{item?.length > 40 ? item?.slice(0, 20) + "..." : item}</p>;
+      },
     },
     {
       title: "Action",
@@ -38,15 +35,12 @@ function CompanySlider() {
         return (
           <>
             <Space direction="vertical">
-              <Button
-                type="primary"
-                //  onClick={() => editItem(item)}
-              >
+              <Button type="primary" onClick={() => editItem(item)}>
                 Edit
               </Button>
               <Popconfirm
                 title="Are you sure to delete this company"
-                // onConfirm={() => deleteItem(item)}
+                onConfirm={() => deleteItem(item)}
                 okText="Yes"
                 cancelText="No"
               >
@@ -64,6 +58,16 @@ function CompanySlider() {
     setData(res.data.data);
   };
 
+  const editItem = (item) => {
+    setEditingData(item);
+    setOpen(true);
+  };
+
+  const deleteItem = async (item) => {
+    await $authHost.delete(`/company/slider/${item.id}`, item)
+    getData()
+  }
+
   useEffect(() => {
     getData();
   }, []);
@@ -72,23 +76,22 @@ function CompanySlider() {
     <>
       <PageHeader
         className="site-page-header"
-        extra={[<Button key="1" onClick={() => setOpen(true)}>Add</Button>]}
+        extra={[
+          <Button key="1" onClick={() => setOpen(true)}>
+            Add
+          </Button>,
+        ]}
       />
-      <CompanySliderDrawer 
+      <CompanySliderDrawer
         open={open}
         setOpen={setOpen}
+        editingData={editingData}
+        getData={getData}
       />
       <Table
         columns={tableColumns}
-        dataSource={data.map((item) => ({
-          key: item?.id,
-          title: item?.title,
-          subtitle:
-            item?.subtitle?.length > 40
-              ? item?.subtitle?.slice(0, 20) + "..."
-              : item?.subtitle,
-          image: item?.image,
-        }))}
+        dataSource={data}
+        rowKey={(item) => item.id}
       />
     </>
   );

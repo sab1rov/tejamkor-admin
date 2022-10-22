@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
   Button,
-  Form,
   Image,
   PageHeader,
   Popconfirm,
@@ -32,11 +31,17 @@ function News() {
       title: "Intro",
       dataIndex: "intro",
       key: 3,
+      render: (item) => {
+        return <p>{item?.length > 40 ? item?.slice(0, 20) + "..." : item}</p>;
+      },
     },
     {
       title: "Content",
       dataIndex: "content",
       key: 4,
+      render: (item) => {
+        return <p>{item?.length > 40 ? item?.slice(0, 20) + "..." : item}</p>;
+      },
     },
     {
       title: "Action",
@@ -98,7 +103,7 @@ function News() {
         editingData={editingData}
         getData={getData}
       />
-      <Table columns={columns} dataSource={data} />
+      <Table columns={columns} dataSource={data} rowKey={(item) => item.id}/>
     </>
   );
 }
