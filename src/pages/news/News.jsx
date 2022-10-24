@@ -1,12 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Button,
-  Image,
-  PageHeader,
-  Popconfirm,
-  Space,
-  Table,
-} from "antd";
+import { Button, Image, PageHeader, Popconfirm, Space, Table } from "antd";
 import { $authHost } from "../../http";
 import NewsDrawer from "../../components/drawers/NewsDrawer";
 
@@ -28,14 +21,6 @@ function News() {
       render: (img) => <Image width={60} src={img} />,
     },
     {
-      title: "Intro",
-      dataIndex: "intro",
-      key: 3,
-      render: (item) => {
-        return <p>{item?.length > 40 ? item?.slice(0, 20) + "..." : item}</p>;
-      },
-    },
-    {
       title: "Content",
       dataIndex: "content",
       key: 4,
@@ -50,7 +35,7 @@ function News() {
         return (
           <>
             <Space direction="vertical">
-              <Button type="primary" onClick={() => editItem(item)}>
+              <Button type="link" onClick={() => editItem(item)}>
                 Edit
               </Button>
               <Popconfirm
@@ -59,9 +44,7 @@ function News() {
                 okText="Yes"
                 cancelText="No"
               >
-                <Button
-                  type="danger"
-                >
+                <Button danger type="text">
                   Delete
                 </Button>
               </Popconfirm>
@@ -83,9 +66,9 @@ function News() {
   };
 
   const deleteItem = async (item) => {
-    await $authHost.delete(`/news/${item.id}`, item)
-    getData()
-  }
+    await $authHost.delete(`/news/${item.id}`, item);
+    getData();
+  };
 
   useEffect(() => {
     getData();
@@ -95,7 +78,11 @@ function News() {
     <>
       <PageHeader
         className="site-page-header"
-        extra={[<Button key="1" onClick={() => setOpen(true)}>Add</Button>]}
+        extra={[
+          <Button key="1" onClick={() => setOpen(true)}>
+            Add
+          </Button>,
+        ]}
       />
       <NewsDrawer
         open={open}
@@ -103,7 +90,7 @@ function News() {
         editingData={editingData}
         getData={getData}
       />
-      <Table columns={columns} dataSource={data} rowKey={(item) => item.id}/>
+      <Table columns={columns} dataSource={data} rowKey={(item) => item.id} />
     </>
   );
 }

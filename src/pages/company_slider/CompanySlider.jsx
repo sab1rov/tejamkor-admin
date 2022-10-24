@@ -35,7 +35,7 @@ function CompanySlider() {
         return (
           <>
             <Space direction="vertical">
-              <Button type="primary" onClick={() => editItem(item)}>
+              <Button type="link" onClick={() => editItem(item)}>
                 Edit
               </Button>
               <Popconfirm
@@ -44,7 +44,7 @@ function CompanySlider() {
                 okText="Yes"
                 cancelText="No"
               >
-                <Button type="danger">Delete</Button>
+                <Button type="text" danger>Delete</Button>
               </Popconfirm>
             </Space>
           </>
