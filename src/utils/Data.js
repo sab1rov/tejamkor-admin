@@ -15,11 +15,6 @@ export const sidebarData = [
     path: "/news",
   },
   {
-    key: 4,
-    label: "Menu",
-    path: "/menu",
-  },
-  {
     key: 5,
     label: "Slider",
     path: "/slider",

@@ -21,7 +21,6 @@ function CompanyDrawer({ open, setOpen, getData, editingData }) {
     getData();
   };
 
-  console.log(editingData);
   const editData = async (values) => {
     await $authHost.patch(`/company/${editingData.id}`, values);
     setOpen(false);
