@@ -2,31 +2,35 @@ import { Button, Image, PageHeader, Popconfirm, Space, Table } from "antd";
 import React, { useEffect, useState } from "react";
 import SliderDrawer from "../../components/drawers/SliderDrawer";
 import { $authHost } from "../../http";
+import useLanguage from "../../hooks/useLanguage.js";
+
 
 function Slider() {
   const [data, setData] = useState([]);
   const [open, setOpen] = useState(false);
   const [editingData, setEditingData] = useState(null);
 
+  const translate = useLanguage()
+
   const tableColumns = [
     {
-      title: "Title",
+      title: translate("title"),
       dataIndex: "title",
       key: 1,
     },
     {
-      title: "Image",
+      title: translate("image"),
       dataIndex: "image",
       key: 4,
       render: (img) => <Image width={60} src={img} />,
     },
     {
-      title: "Subtitle",
+      title: translate("subtitle"),
       dataIndex: "subtitle",
       key: 2,
     },
     {
-      title: "Action",
+      title: translate("action"),
       key: 5,
       render: (item) => {
         return (
@@ -77,7 +81,7 @@ function Slider() {
         className="site-page-header"
         extra={[
           <Button key="1" onClick={() => setOpen(true)}>
-            Add
+            {translate('add')}
           </Button>,
         ]}
       />

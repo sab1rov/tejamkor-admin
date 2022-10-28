@@ -1,39 +1,44 @@
+import React, { useContext, useEffect, useState } from "react";
 import { Button, Image, PageHeader, Popconfirm, Space, Table } from "antd";
-import React, { useEffect, useState } from "react";
 import CompanyDrawer from "../../components/drawers/CompanyDrawer";
 import { $authHost } from "../../http";
+import useLanguage from "../../hooks/useLanguage.js";
+import { LanguageContext } from "../../context/LanguageContext";
 
 function Company() {
+  const { language } = useContext(LanguageContext);
   const [data, setData] = useState([]);
   const [open, setOpen] = useState(false);
   const [editingData, setEditingData] = useState(null);
 
+  const translate = useLanguage();
+
   const tableColumns = [
     {
       key: 1,
-      title: "Name",
-      dataIndex: "name",
+      title: translate("name"),
+      dataIndex: language === "uz" ? "name" : "name_ru",
     },
     {
       key: 2,
-      title: "Logo",
+      title: translate("logo"),
       dataIndex: "logo",
       render: (img) => <Image width={60} src={img} />,
     },
     {
       key: 4,
-      title: "Phone",
+      title: translate("phone"),
       dataIndex: "phone",
     },
     {
-      title: "Action",
+      title: translate("action"),
       key: 5,
       render: (item) => {
         return (
           <>
             <Space direction="vertical">
               <Button type="link" onClick={() => editItem(item)}>
-                Edit
+                {translate("edit")}
               </Button>
               <Popconfirm
                 title="Are you sure to delete this company"
@@ -42,7 +47,7 @@ function Company() {
                 cancelText="No"
               >
                 <Button type="text" danger>
-                  Delete
+                  {translate("delete")}
                 </Button>
               </Popconfirm>
             </Space>
@@ -54,14 +59,13 @@ function Company() {
 
   const editItem = (item) => {
     setEditingData(item);
-    setOpen(true)
+    setOpen(true);
   };
 
   const deleteItem = async (item) => {
-    await $authHost.delete(`/company/${item.id}`)
-    getData()
-  }
-
+    await $authHost.delete(`/company/${item.id}`);
+    getData();
+  };
 
   const getData = async () => {
     const res = await $authHost.get("company");
@@ -78,7 +82,7 @@ function Company() {
         className="site-page-header"
         extra={[
           <Button key="1" onClick={() => setOpen(true)}>
-            Add
+            {translate("add")}
           </Button>,
         ]}
       />
@@ -99,3 +103,10 @@ function Company() {
 }
 
 export default Company;
+
+// dataIndex: `name${langObj[language]}`,
+
+// const langObj ={
+//   uz:'',
+//   ru:'_ru'
+// }

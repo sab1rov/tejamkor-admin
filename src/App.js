@@ -3,11 +3,11 @@ import "antd/dist/antd.css";
 import Main from "./pages/main/Main";
 import { useContext } from "react";
 import { userContext } from "./context/UserContext";
-import {   Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 
 function App() {
-  const { user, setUser } = useContext(userContext);
-  
+  const { user } = useContext(userContext);
+
   return user ? (
     <div
       style={{
@@ -23,7 +23,7 @@ function App() {
     <>
       <Routes>
         <Route path="/login" element={<Login />} exact />
-        <Route path="*" element={<Login />} />
+        <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </>
   );

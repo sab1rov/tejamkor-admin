@@ -2,56 +2,58 @@ import { Button, Drawer, Form, Input, Tabs } from "antd";
 import React, { useEffect } from "react";
 import { $authHost } from "../../http";
 import MediaUpload from "../MediaUpload";
+import useLanguage from "../../hooks/useLanguage.js";
 
 function ServicesSlider({ open, setOpen, getData, editingData }) {
   const [form] = Form.useForm();
+  const translate = useLanguage()
 
   const FirstTab = () => {
     return (
       <>
         <Form.Item
           name="title"
-          label="Title"
+          label={translate("title")}
           rules={[
             {
               required: true,
             },
           ]}
         >
-          <Input placeholder="title" />
+          <Input placeholder={translate("title")} />
         </Form.Item>
         <Form.Item
           name="title_ru"
-          label="Title Ru"
+          label={translate("title_ru")}
           rules={[
             {
               required: true,
             },
           ]}
         >
-          <Input placeholder="title_ru" />
+          <Input placeholder={translate("title_ru")} />
         </Form.Item>
         <Form.Item
           name="description"
-          label="Description"
+          label={translate("description")}
           rules={[
             {
               required: true,
             },
           ]}
         >
-          <Input placeholder="description" />
+          <Input placeholder={translate("description")} />
         </Form.Item>
         <Form.Item
           name="description_ru"
-          label="Description Ru"
+          label={translate("description_ru")}
           rules={[
             {
               required: true,
             },
           ]}
         >
-          <Input placeholder="description_ru" />
+          <Input placeholder={translate("description_ru")}/>
         </Form.Item>
       </>
     );
@@ -62,40 +64,40 @@ function ServicesSlider({ open, setOpen, getData, editingData }) {
       <>
         <Form.Item
           name="content"
-          label="Content"
+          label={translate("content")}
           rules={[
             {
               required: true,
             },
           ]}
         >
-          <Input placeholder="content" />
+          <Input placeholder={translate("content")} />
         </Form.Item>
         <Form.Item
           name="content_ru"
-          label="Content Ru"
+          label={translate("content_ru")}
           rules={[
             {
               required: true,
             },
           ]}
         >
-          <Input placeholder="content_ru" />
+          <Input placeholder={translate("content_ru")} />
         </Form.Item>
         <Form.Item
           name="slug"
-          label="Slug"
+          label={translate("slug")}
           rules={[
             {
               required: true,
             },
           ]}
         >
-          <Input placeholder="slug" />
+          <Input placeholder={translate("slug")} />
         </Form.Item>
         <Form.Item
           name="image"
-          label="Image"
+          label={translate("image")}
           rules={[
             {
               required: true,
@@ -111,12 +113,12 @@ function ServicesSlider({ open, setOpen, getData, editingData }) {
   const tabItems = [
     {
       key: 1,
-      label: "Title and Description",
+      label: `${translate("title")}, ${translate("description")}`,
       children: <FirstTab />,
     },
     {
       key: 2,
-      label: "Content, Slug and Image",
+      label: `${translate('content')}, ${translate("slug")}, ${translate("image")}`,
       children: <SecondTab />,
     },
   ];

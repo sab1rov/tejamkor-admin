@@ -2,9 +2,11 @@ import { Button, Drawer, Form, Input, Tabs } from "antd";
 import React, { useEffect } from "react";
 import { $authHost } from "../../http";
 import MediaUpload from "../MediaUpload";
+import useLanguage from "../../hooks/useLanguage.js";
 
 function SliderDrawer({ open, setOpen, getData, editingData }) {
   const [form] = Form.useForm();
+  const translate = useLanguage()
 
   const onClose = () => {
     setOpen(false);
@@ -32,47 +34,47 @@ function SliderDrawer({ open, setOpen, getData, editingData }) {
       <>
         <Form.Item
           name="title"
-          label="Title"
+          label={translate("title")}
           rules={[
             {
               required: true,
             },
           ]}
         >
-          <Input placeholder="title" />
+          <Input placeholder={translate("title")} />
         </Form.Item>
         <Form.Item
           name="title_ru"
-          label="Title Ru"
+          label={translate("title_ru")}
           rules={[
             {
               required: true,
             },
           ]}
         >
-          <Input placeholder="title_ru" />
+          <Input placeholder={translate("title_ru")} />
         </Form.Item>
         <Form.Item
           name="subtitle"
-          label="Subtitle"
+          label={translate("subtitle")}
           rules={[
             {
               required: true,
             },
           ]}
         >
-          <Input placeholder="subtitle" />
+          <Input placeholder={translate("subtitle")} />
         </Form.Item>
         <Form.Item
           name="subtitle_ru"
-          label="Subtitle Ru"
+          label={translate("subtitle_ru")}
           rules={[
             {
               required: true,
             },
           ]}
         >
-          <Input placeholder="subtitle_ru" />
+          <Input placeholder={translate("subtitle_ru")} />
         </Form.Item>
       </>
     );
@@ -83,7 +85,7 @@ function SliderDrawer({ open, setOpen, getData, editingData }) {
       <>
         <Form.Item
           name="image"
-          label="Image"
+          label={translate("image")}
           rules={[
             {
               required: true,
@@ -93,7 +95,7 @@ function SliderDrawer({ open, setOpen, getData, editingData }) {
           <MediaUpload form={form} />
         </Form.Item>
         <Form.Item
-          name="video"
+          name={translate("video")}
           label="Video"
           rules={[
             {
@@ -101,7 +103,7 @@ function SliderDrawer({ open, setOpen, getData, editingData }) {
             },
           ]}
         >
-          <Input placeholder="video link" />
+          <Input placeholder={translate("link")} />
         </Form.Item>
       </>
     );
@@ -110,12 +112,12 @@ function SliderDrawer({ open, setOpen, getData, editingData }) {
   const tabItem = [
     {
       key: 1,
-      label: "Title and Subtitle",
+      label: `${translate("title")}, ${translate("subtitle")}`,
       children: <FirstTab />,
     },
     {
       key: 2,
-      label: "Image and Video",
+      label: `${translate("image")}, ${translate("video")}`,
       children: <SecondTab />,
     },
   ];

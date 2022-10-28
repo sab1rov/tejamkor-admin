@@ -2,9 +2,11 @@ import { Button, Drawer, Form, Input, Tabs } from "antd";
 import React, { useEffect } from "react";
 import { $authHost } from "../../http";
 import MediaUpload from "../MediaUpload";
+import useLanguage from "../../hooks/useLanguage.js";
 
 function CompanyDrawer({ open, setOpen, getData, editingData }) {
   const [form] = Form.useForm();
+  const translate = useLanguage();
 
   const onClose = () => {
     setOpen(false);
@@ -32,47 +34,47 @@ function CompanyDrawer({ open, setOpen, getData, editingData }) {
       <>
         <Form.Item
           name="name"
-          label="Name"
+          label={translate("name")}
           rules={[
             {
               required: true,
             },
           ]}
         >
-          <Input />
+          <Input placeholder={translate("name")} />
         </Form.Item>
         <Form.Item
           name="name_ru"
-          label="Name Ru"
+          label={translate("name_ru")}
           rules={[
             {
               required: true,
             },
           ]}
         >
-          <Input />
+          <Input placeholder={translate("name_ru")} />
         </Form.Item>
         <Form.Item
           name="companyFeatureTitle"
-          label="Company Feature Title"
+          label={translate("companyFeatureTitle")}
           rules={[
             {
               required: true,
             },
           ]}
         >
-          <Input />
+          <Input placeholder={translate("companyFeatureTitle")} />
         </Form.Item>
         <Form.Item
-          name="companyFeatureSubTitle"
-          label="Company Feature SubTitle"
+          name="companyFeatureSubtitle"
+          label={translate("companyFeatureSubtitle")}
           rules={[
             {
               required: true,
             },
           ]}
         >
-          <Input />
+          <Input placeholder={translate("companyFeatureTitle")} />
         </Form.Item>
       </>
     );
@@ -83,40 +85,40 @@ function CompanyDrawer({ open, setOpen, getData, editingData }) {
       <>
         <Form.Item
           name="address"
-          label="Address"
+          label={translate("address")}
           rules={[
             {
               required: true,
             },
           ]}
         >
-          <Input />
+          <Input placeholder={translate("address")} />
         </Form.Item>
         <Form.Item
           name="address_ru"
-          label="Address Ru"
+          label={translate("address_ru")}
           rules={[
             {
               required: true,
             },
           ]}
         >
-          <Input />
+          <Input placeholder={translate("address_ru")}/>
         </Form.Item>
         <Form.Item
           name="phone"
-          label="Phone"
+          label={translate("phone")}
           rules={[
             {
               required: true,
             },
           ]}
         >
-          <Input />
+          <Input placeholder={translate("phone")}/>
         </Form.Item>
         <Form.Item
           name="logo"
-          label="Logo"
+          label={translate("logo")}
           rules={[
             {
               required: true,
@@ -134,51 +136,51 @@ function CompanyDrawer({ open, setOpen, getData, editingData }) {
       <>
         <Form.Item
           name="telegram"
-          label="Telegram"
+          label={translate("telegram")}
           rules={[
             {
               required: true,
             },
           ]}
         >
-          <Input />
+          <Input placeholder={translate('link')}/>
         </Form.Item>
         <Form.Item
           name="instagram"
-          label="Instagram"
+          label={translate("instagram")}
           rules={[
             {
               required: true,
             },
           ]}
         >
-          <Input />
+          <Input placeholder={translate('link')}/>
         </Form.Item>
         <Form.Item
           name="facebook"
-          label="Facebook"
+          label={translate("facebook")}
           rules={[
             {
               required: true,
             },
           ]}
         >
-          <Input />
+          <Input placeholder={translate('link')}/>
         </Form.Item>
         <Form.Item
           name="youtube"
-          label="Youtube"
+          label={translate("youtube")}
           rules={[
             {
               required: true,
             },
           ]}
         >
-          <Input />
+          <Input placeholder={translate('link')}/>
         </Form.Item>
         <Form.Item
           name="counts"
-          label="Counts"
+          label={translate("counts")}
           rules={[
             {
               required: true,
@@ -194,17 +196,19 @@ function CompanyDrawer({ open, setOpen, getData, editingData }) {
   const tabItem = [
     {
       key: 1,
-      label: "Name and Feature",
+      label: `${translate("name")}, ${translate("feature")}`,
       children: <FirstTab />,
     },
     {
       key: 2,
-      label: "Address, Phone and Logo",
+      label: `${translate("address")}, ${translate("phone")}, ${translate(
+        "logo"
+      )}`,
       children: <SecondTab />,
     },
     {
       key: 3,
-      label: "Links",
+      label: translate("link"),
       children: <ThirdTab />,
     },
   ];
@@ -222,7 +226,7 @@ function CompanyDrawer({ open, setOpen, getData, editingData }) {
           <Tabs items={tabItem} />
           <Form.Item>
             <Button htmlType="submit" type="primary" size="large" block>
-              {editingData ? "Edit" : "Add"}
+              {translate("submit")}
             </Button>
           </Form.Item>
         </Form>

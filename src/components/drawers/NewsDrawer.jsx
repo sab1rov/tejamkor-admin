@@ -5,9 +5,11 @@ import "react-quill/dist/quill.snow.css";
 import { $authHost } from "../../http";
 import MediaUpload from "../MediaUpload";
 import moment from "moment";
+import useLanguage from "../../hooks/useLanguage.js";
 
 function NewsDrawer({ open, setOpen, editingData, getData }) {
   const [form] = Form.useForm();
+  const translate = useLanguage()
 
   const postData = async (values) => {
     await $authHost.post("/news", values);
@@ -37,47 +39,47 @@ function NewsDrawer({ open, setOpen, editingData, getData }) {
       <>
         <Form.Item
           name="title"
-          label="Title"
+          label={translate("title")}
           rules={[
             {
               required: true,
             },
           ]}
         >
-          <Input />
+          <Input placeholder={translate("title")}/>
         </Form.Item>
         <Form.Item
           name="title_ru"
-          label="Title Ru"
+          label={translate("title_ru")}
           rules={[
             {
               required: true,
             },
           ]}
         >
-          <Input />
+          <Input placeholder={translate("title_ru")}/>
         </Form.Item>
         <Form.Item
           name="intro"
-          label="Intro"
+          label={translate("intro")}
           rules={[
             {
               required: true,
             },
           ]}
         >
-          <Input />
+          <Input placeholder={translate("intro")}/>
         </Form.Item>
         <Form.Item
           name="intro_ru"
-          label="Intro Ru"
+          label={translate("intro_ru")}
           rules={[
             {
               required: true,
             },
           ]}
         >
-          <Input />
+          <Input placeholder={translate("intro_ru")}/>
         </Form.Item>
       </>
     );
@@ -88,7 +90,7 @@ function NewsDrawer({ open, setOpen, editingData, getData }) {
       <>
         <Form.Item
           name="content"
-          label="Content"
+          label={translate("content")}
           rules={[
             {
               required: true,
@@ -102,7 +104,7 @@ function NewsDrawer({ open, setOpen, editingData, getData }) {
         </Form.Item>
         <Form.Item
           name="content_ru"
-          label="Content Ru"
+          label={translate("content_ru")}
           rules={[
             {
               required: true,
@@ -123,7 +125,7 @@ function NewsDrawer({ open, setOpen, editingData, getData }) {
       <>
         <Form.Item
           name="image"
-          label="Image"
+          label={translate("image")}
           rules={[
             {
               required: true,
@@ -134,7 +136,7 @@ function NewsDrawer({ open, setOpen, editingData, getData }) {
         </Form.Item>
         <Form.Item
           name="date"
-          label="Date"
+          label={translate("date")}
           rules={[
             {
               required: true,
@@ -146,14 +148,14 @@ function NewsDrawer({ open, setOpen, editingData, getData }) {
         <Col span={12}>
           <Form.Item
             name="author"
-            label="Author"
+            label={translate("author")}
             rules={[
               {
                 required: true,
               },
             ]}
           >
-            <Input placeholder="author" />
+            <Input placeholder={translate("author")} />
           </Form.Item>
         </Col>
       </>
@@ -162,17 +164,17 @@ function NewsDrawer({ open, setOpen, editingData, getData }) {
 
   const tabItems = [
     {
-      label: "Title and Intro",
+      label: `${translate("title")}, ${translate("intro")}`,
       key: 1,
       children: <TabOne />,
     },
     {
-      label: "Content",
+      label: translate('content'),
       key: 2,
       children: <TabTwo />,
     },
     {
-      label: "Image, Date and Author",
+      label: `${translate("image")}, ${translate("date")}, ${translate("author")}`,
       key: 3,
       children: <TabThree />,
     },
@@ -197,7 +199,7 @@ function NewsDrawer({ open, setOpen, editingData, getData }) {
               style={{ marginTop: "20px" }}
               block
             >
-              {editingData ? "Edit" : "Add"}
+              {translate("submit")}
             </Button>
           </Form.Item>
         </Form>

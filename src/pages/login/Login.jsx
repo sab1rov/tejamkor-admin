@@ -6,7 +6,7 @@ import { domain } from "../../utils/urls";
 import { userContext } from "../../context/UserContext";
 
 function Login() {
-  const {user, setUser} = useContext(userContext)
+  const { user, setUser } = useContext(userContext);
   const [username, setUsername] = useState("");
   const [pwd, setPwd] = useState("");
   const [loadingIcon, setLoadingIcon] = useState(false);
@@ -14,18 +14,19 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const response = await axios.post(`${domain}/admin/login`, { username, pwd })
-    const {data} = response.data
-    const {tokens } = data
-    localStorage.setItem('accessToken', tokens.accessToken)
-    localStorage.setItem('refreshToken', tokens.refreshToken)
-    localStorage.setItem('id', data.id)
-    localStorage.setItem('user', true)
+    const response = await axios.post(`${domain}/admin/login`, {
+      username,
+      pwd,
+    });
+    const { data } = response.data;
+    const { tokens } = data;
+    localStorage.setItem("accessToken", tokens.accessToken);
+    localStorage.setItem("refreshToken", tokens.refreshToken);
+    localStorage.setItem("id", data.id);
+    localStorage.setItem("user", true);
 
-    setUser(true)
+    setUser(true);
   };
-  
- 
 
   return (
     <Row

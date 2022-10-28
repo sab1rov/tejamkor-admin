@@ -2,9 +2,11 @@ import { Button, Drawer, Form, Input, Tabs } from "antd";
 import React, { useEffect } from "react";
 import { $authHost } from "../../http";
 import MediaUpload from "../MediaUpload";
+import useLanguage from "../../hooks/useLanguage.js";
 
 function CompanySliderDrawer({ open, setOpen, editingData, getData }) {
   const [form] = Form.useForm();
+  const translate = useLanguage()
 
   const onClose = () => {
     setOpen(false);
@@ -33,47 +35,47 @@ function CompanySliderDrawer({ open, setOpen, editingData, getData }) {
       <>
         <Form.Item
           name="title"
-          label="Title"
+          label={translate('title')}
           rules={[
             {
               required: true,
             },
           ]}
         >
-          <Input />
+          <Input placeholder={translate('title')}/>
         </Form.Item>
         <Form.Item
           name="title_ru"
-          label="Title Ru"
+          label={translate("title_ru")}
           rules={[
             {
               required: true,
             },
           ]}
         >
-          <Input />
+          <Input placeholder={translate("title_ru")}/>
         </Form.Item>
         <Form.Item
           name="subtitle"
-          label="Subtitle"
+          label={translate("subtitle")}
           rules={[
             {
               required: true,
             },
           ]}
         >
-          <Input />
+          <Input placeholder={translate("subtitle")}/>
         </Form.Item>
         <Form.Item
           name="subtitle_ru"
-          label="Subtitle Ru"
+          label={translate("subtitle_ru")}
           rules={[
             {
               required: true,
             },
           ]}
         >
-          <Input />
+          <Input placeholder={translate("subtitle_ru")}/>
         </Form.Item>
       </>
     );
@@ -84,7 +86,7 @@ function CompanySliderDrawer({ open, setOpen, editingData, getData }) {
       <>
         <Form.Item
           name="image"
-          label="Image"
+          label={translate("image")}
           rules={[
             {
               required: true,
@@ -95,14 +97,14 @@ function CompanySliderDrawer({ open, setOpen, editingData, getData }) {
         </Form.Item>
         <Form.Item
           name="video"
-          label="Video"
+          label={translate("video")}
           rules={[
             {
               required: true
             }
           ]}
         >
-          <Input />
+          <Input placeholder={translate("link")}/>
         </Form.Item>
       </>
     );
@@ -111,12 +113,12 @@ function CompanySliderDrawer({ open, setOpen, editingData, getData }) {
   const tabItem = [
     {
       key: 1,
-      label: "Title and Subtitle",
+      label: `${translate('title')}, ${translate("subtitle")}`,
       children: <TabOne />,
     },
     {
       key: 2,
-      label: "Image and Video",
+      label: `${translate('image')}, ${translate("video")}`,
       children: <TabTwo />,
     },
   ];
@@ -134,7 +136,7 @@ function CompanySliderDrawer({ open, setOpen, editingData, getData }) {
           <Tabs items={tabItem} />
           <Form.Item>
             <Button htmlType="submit" type="primary" size="large" block>
-              {editingData ? "Edit" : "Add"}
+              {translate("submit")}
             </Button>
           </Form.Item>
         </Form>

@@ -2,9 +2,11 @@ import { Button, Drawer, Form, Input } from "antd";
 import React, { useEffect } from "react";
 import { $authHost } from "../../http";
 import MediaUpload from "../MediaUpload";
+import useLanguage from "../../hooks/useLanguage.js";
 
 function TeamDrawer({ open, setOpen, getData, editingData }) {
   const [form] = Form.useForm();
+  const translate = useLanguage()
 
   const onClose = () => {
     setOpen(false);
@@ -32,51 +34,51 @@ function TeamDrawer({ open, setOpen, getData, editingData }) {
       <>
         <Form.Item
           name="name"
-          label="Name"
+          label={translate("name")}
           rules={[
             {
               required: true,
             },
           ]}
         >
-          <Input placeholder="name" />
+          <Input placeholder={translate("name")}/>
         </Form.Item>
         <Form.Item
           name="name_ru"
-          label="Name Ru"
+          label={translate("name_ru")}
           rules={[
             {
               required: true,
             },
           ]}
         >
-          <Input placeholder="name_ru" />
+          <Input placeholder={translate("name_ru")} />
         </Form.Item>
         <Form.Item
           name="job"
-          label="Job"
+          label={translate("job")}
           rules={[
             {
               required: true,
             },
           ]}
         >
-          <Input placeholder="job" />
+          <Input placeholder={translate("job")} />
         </Form.Item>
         <Form.Item
           name="job_ru"
-          label="Job Ru"
+          label={translate("job_ru")}
           rules={[
             {
               required: true,
             },
           ]}
         >
-          <Input placeholder="job_ru" />
+          <Input placeholder={translate("job_ru")} />
         </Form.Item>
         <Form.Item
           name="image"
-          label="Image"
+          label={translate("image")}
           rules={[
             {
               required: true,
@@ -102,7 +104,7 @@ function TeamDrawer({ open, setOpen, getData, editingData }) {
           <FormItems />
           <Form.Item>
             <Button htmlType="submit" type="primary" size="large" block>
-              Submit
+              {translate("submit")}
             </Button>
           </Form.Item>
         </Form>

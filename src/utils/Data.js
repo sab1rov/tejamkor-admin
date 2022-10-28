@@ -1,32 +1,32 @@
 export const sidebarData = [
   {
     key: 1,
-    label: "Company",
+    label: "company",
     path: "/company",
   },
   {
     key: 2,
-    label: "Company Slider",
+    label: "company_slider",
     path: "/company_slider",
   },
   {
     key: 3,
-    label: "News",
+    label: "news",
     path: "/news",
   },
   {
     key: 5,
-    label: "Slider",
+    label: "slider",
     path: "/slider",
   },
   {
     key: 6,
-    label: "Services",
+    label: "services",
     path: "/services",
   },
   {
     key: 7,
-    label: "Team",
+    label: "team",
     path: "/team",
   },
 ];

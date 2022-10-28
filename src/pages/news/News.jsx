@@ -2,26 +2,29 @@ import React, { useEffect, useState } from "react";
 import { Button, Image, PageHeader, Popconfirm, Space, Table } from "antd";
 import { $authHost } from "../../http";
 import NewsDrawer from "../../components/drawers/NewsDrawer";
+import useLanguage from "../../hooks/useLanguage.js";
 
 function News() {
   const [data, setData] = useState([]);
   const [open, setOpen] = useState(false);
   const [editingData, setEditingData] = useState(null);
 
+  const translate = useLanguage();
+
   const columns = [
     {
-      title: "Title",
+      title: translate("title"),
       dataIndex: "title",
       key: 1,
     },
     {
-      title: "Image",
+      title: translate("image"),
       dataIndex: "image",
       key: 2,
       render: (img) => <Image width={60} src={img} />,
     },
     {
-      title: "Content",
+      title: translate("content"),
       dataIndex: "content",
       key: 4,
       render: (item) => {
@@ -29,14 +32,14 @@ function News() {
       },
     },
     {
-      title: "Action",
+      title: translate("action"),
       key: 5,
       render: (item) => {
         return (
           <>
             <Space direction="vertical">
               <Button type="link" onClick={() => editItem(item)}>
-                Edit
+                {translate("edit")}
               </Button>
               <Popconfirm
                 title="Are you sure to delete this company"
@@ -45,7 +48,7 @@ function News() {
                 cancelText="No"
               >
                 <Button danger type="text">
-                  Delete
+                  {translate("delete")}
                 </Button>
               </Popconfirm>
             </Space>
@@ -80,7 +83,7 @@ function News() {
         className="site-page-header"
         extra={[
           <Button key="1" onClick={() => setOpen(true)}>
-            Add
+            {translate("add")}
           </Button>,
         ]}
       />
