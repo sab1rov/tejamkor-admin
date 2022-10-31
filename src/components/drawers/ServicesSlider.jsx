@@ -1,12 +1,19 @@
 import { Button, Drawer, Form, Input, Tabs } from "antd";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { $authHost } from "../../http";
 import MediaUpload from "../MediaUpload";
 import useLanguage from "../../hooks/useLanguage.js";
 
-function ServicesSlider({ open, setOpen, getData, editingData }) {
+function ServicesSlider({
+  open,
+  setOpen,
+  getData,
+  editingData,
+  setEditingData,
+}) {
+  const [loadingIcon, setLoadingIcon] = useState(false);
   const [form] = Form.useForm();
-  const translate = useLanguage()
+  const translate = useLanguage();
 
   const FirstTab = () => {
     return (
@@ -53,7 +60,7 @@ function ServicesSlider({ open, setOpen, getData, editingData }) {
             },
           ]}
         >
-          <Input placeholder={translate("description_ru")}/>
+          <Input placeholder={translate("description_ru")} />
         </Form.Item>
       </>
     );
@@ -118,7 +125,9 @@ function ServicesSlider({ open, setOpen, getData, editingData }) {
     },
     {
       key: 2,
-      label: `${translate('content')}, ${translate("slug")}, ${translate("image")}`,
+      label: `${translate("content")}, ${translate("slug")}, ${translate(
+        "image"
+      )}`,
       children: <SecondTab />,
     },
   ];
@@ -126,9 +135,11 @@ function ServicesSlider({ open, setOpen, getData, editingData }) {
   const onClose = () => {
     setOpen(false);
     form.resetFields();
+    setEditingData(null);
   };
 
   const onFinish = (values) => {
+    setLoadingIcon(true);
     editingData ? editData(values) : postData(values);
   };
 
@@ -136,12 +147,16 @@ function ServicesSlider({ open, setOpen, getData, editingData }) {
     await $authHost.post("/services", values);
     setOpen(false);
     getData();
+    setLoadingIcon(false);
+    form.resetFields();
   };
 
   const editData = async (values) => {
     await $authHost.patch(`/services/${editingData.id}`, values);
     setOpen(false);
     getData();
+    setLoadingIcon(false);
+    form.resetFields();
   };
 
   useEffect(() => {
@@ -156,7 +171,13 @@ function ServicesSlider({ open, setOpen, getData, editingData }) {
         <Form onFinish={onFinish} layout="vertical" form={form}>
           <Tabs items={tabItems} />
           <Form.Item>
-            <Button htmlType="submit" type="primary" size="large" block>
+            <Button
+              htmlType="submit"
+              type="primary"
+              size="large"
+              block
+              loading={loadingIcon}
+            >
               Submit
             </Button>
           </Form.Item>

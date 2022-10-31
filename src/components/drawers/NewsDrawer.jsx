@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Col, DatePicker, Drawer, Form, Input, Tabs } from "antd";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
@@ -7,14 +7,17 @@ import MediaUpload from "../MediaUpload";
 import moment from "moment";
 import useLanguage from "../../hooks/useLanguage.js";
 
-function NewsDrawer({ open, setOpen, editingData, getData }) {
+function NewsDrawer({ open, setOpen, editingData, setEditingData, getData }) {
+  const [loadingIcon, setLoadingIcon] = useState(false);
   const [form] = Form.useForm();
-  const translate = useLanguage()
+  const translate = useLanguage();
 
   const postData = async (values) => {
     await $authHost.post("/news", values);
     setOpen(false);
     getData();
+    form.resetFields();
+    setLoadingIcon(false)
   };
 
   const editData = async (values) => {
@@ -22,11 +25,15 @@ function NewsDrawer({ open, setOpen, editingData, getData }) {
     await $authHost.patch(`/news/${id}`, values);
     setOpen(false);
     getData();
+    form.resetFields();
+    setLoadingIcon(false)
   };
 
   const onFinish = async (values) => {
+    setEditingData(null);
     values.date = values["date"].format("YYYY-MM-DD");
     editingData ? editData(values) : postData(values);
+    setLoadingIcon(true)
   };
 
   const onClose = () => {
@@ -46,7 +53,7 @@ function NewsDrawer({ open, setOpen, editingData, getData }) {
             },
           ]}
         >
-          <Input placeholder={translate("title")}/>
+          <Input placeholder={translate("title")} />
         </Form.Item>
         <Form.Item
           name="title_ru"
@@ -57,7 +64,7 @@ function NewsDrawer({ open, setOpen, editingData, getData }) {
             },
           ]}
         >
-          <Input placeholder={translate("title_ru")}/>
+          <Input placeholder={translate("title_ru")} />
         </Form.Item>
         <Form.Item
           name="intro"
@@ -68,7 +75,7 @@ function NewsDrawer({ open, setOpen, editingData, getData }) {
             },
           ]}
         >
-          <Input placeholder={translate("intro")}/>
+          <Input placeholder={translate("intro")} />
         </Form.Item>
         <Form.Item
           name="intro_ru"
@@ -79,7 +86,7 @@ function NewsDrawer({ open, setOpen, editingData, getData }) {
             },
           ]}
         >
-          <Input placeholder={translate("intro_ru")}/>
+          <Input placeholder={translate("intro_ru")} />
         </Form.Item>
       </>
     );
@@ -169,12 +176,14 @@ function NewsDrawer({ open, setOpen, editingData, getData }) {
       children: <TabOne />,
     },
     {
-      label: translate('content'),
+      label: translate("content"),
       key: 2,
       children: <TabTwo />,
     },
     {
-      label: `${translate("image")}, ${translate("date")}, ${translate("author")}`,
+      label: `${translate("image")}, ${translate("date")}, ${translate(
+        "author"
+      )}`,
       key: 3,
       children: <TabThree />,
     },
@@ -198,6 +207,7 @@ function NewsDrawer({ open, setOpen, editingData, getData }) {
               size="large"
               style={{ marginTop: "20px" }}
               block
+              loading={loadingIcon}
             >
               {translate("submit")}
             </Button>

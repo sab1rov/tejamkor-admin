@@ -1,13 +1,15 @@
 import { Button, Image, PageHeader, Popconfirm, Space, Table } from "antd";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import ServicesSlider from "../../components/drawers/ServicesSlider";
 import { $authHost } from "../../http";
 import useLanguage from "../../hooks/useLanguage.js";
+import { LanguageContext } from "../../context/LanguageContext";
 
 function Services() {
   const [data, setData] = useState([]);
   const [open, setOpen] = useState(false);
   const [editingData, setEditingData] = useState(null);
+  const { language } = useContext(LanguageContext);
 
   const translate = useLanguage();
 
@@ -15,7 +17,7 @@ function Services() {
     {
       key: 1,
       title: translate("title"),
-      dataIndex: "title",
+      dataIndex: language === "uz" ? "title" : "title_ru",
     },
     {
       key: 2,
@@ -26,7 +28,7 @@ function Services() {
     {
       key: 3,
       title: translate("description"),
-      dataIndex: "description",
+      dataIndex: language === "uz" ? "description" : "description_ru",
       render: (item) => {
         return <p>{item?.length > 40 ? item?.slice(0, 20) + "..." : item}</p>;
       },
@@ -97,6 +99,7 @@ function Services() {
         setOpen={setOpen}
         getData={getData}
         editingData={editingData}
+        setEditingData={setEditingData}
       />
     </>
   );

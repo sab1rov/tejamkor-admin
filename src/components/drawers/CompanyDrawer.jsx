@@ -1,31 +1,44 @@
+import React, { useEffect, useState } from "react";
 import { Button, Drawer, Form, Input, Tabs } from "antd";
-import React, { useEffect } from "react";
+import useLanguage from "../../hooks/useLanguage.js";
 import { $authHost } from "../../http";
 import MediaUpload from "../MediaUpload";
-import useLanguage from "../../hooks/useLanguage.js";
 
-function CompanyDrawer({ open, setOpen, getData, editingData }) {
+function CompanyDrawer({
+  open,
+  setOpen,
+  getData,
+  editingData,
+  setEditingData,
+}) {
+  const [loadingIcon, setLoadingIcon] = useState(false);
   const [form] = Form.useForm();
   const translate = useLanguage();
 
   const onClose = () => {
     setOpen(false);
     form.resetFields();
+    setEditingData(null);
   };
 
   const onFinish = (values) => {
+    setLoadingIcon(true);
     editingData ? editData(values) : postData(values);
   };
 
   const postData = async (values) => {
     await $authHost.post("/company", values);
+    setLoadingIcon(false);
     setOpen(false);
+    form.resetFields();
     getData();
   };
 
   const editData = async (values) => {
     await $authHost.patch(`/company/${editingData.id}`, values);
     setOpen(false);
+    form.resetFields();
+    setLoadingIcon(false);
     getData();
   };
 
@@ -66,7 +79,7 @@ function CompanyDrawer({ open, setOpen, getData, editingData }) {
           <Input placeholder={translate("companyFeatureTitle")} />
         </Form.Item>
         <Form.Item
-          name="companyFeatureSubtitle"
+          name="companyFeatureSubTitle"
           label={translate("companyFeatureSubtitle")}
           rules={[
             {
@@ -103,7 +116,7 @@ function CompanyDrawer({ open, setOpen, getData, editingData }) {
             },
           ]}
         >
-          <Input placeholder={translate("address_ru")}/>
+          <Input placeholder={translate("address_ru")} />
         </Form.Item>
         <Form.Item
           name="phone"
@@ -114,7 +127,7 @@ function CompanyDrawer({ open, setOpen, getData, editingData }) {
             },
           ]}
         >
-          <Input placeholder={translate("phone")}/>
+          <Input placeholder={translate("phone")} />
         </Form.Item>
         <Form.Item
           name="logo"
@@ -143,7 +156,7 @@ function CompanyDrawer({ open, setOpen, getData, editingData }) {
             },
           ]}
         >
-          <Input placeholder={translate('link')}/>
+          <Input placeholder={translate("link")} />
         </Form.Item>
         <Form.Item
           name="instagram"
@@ -154,7 +167,7 @@ function CompanyDrawer({ open, setOpen, getData, editingData }) {
             },
           ]}
         >
-          <Input placeholder={translate('link')}/>
+          <Input placeholder={translate("link")} />
         </Form.Item>
         <Form.Item
           name="facebook"
@@ -165,7 +178,7 @@ function CompanyDrawer({ open, setOpen, getData, editingData }) {
             },
           ]}
         >
-          <Input placeholder={translate('link')}/>
+          <Input placeholder={translate("link")} />
         </Form.Item>
         <Form.Item
           name="youtube"
@@ -176,7 +189,7 @@ function CompanyDrawer({ open, setOpen, getData, editingData }) {
             },
           ]}
         >
-          <Input placeholder={translate('link')}/>
+          <Input placeholder={translate("link")} />
         </Form.Item>
         <Form.Item
           name="counts"
@@ -225,7 +238,13 @@ function CompanyDrawer({ open, setOpen, getData, editingData }) {
         <Form layout="vertical" form={form} onFinish={onFinish}>
           <Tabs items={tabItem} />
           <Form.Item>
-            <Button htmlType="submit" type="primary" size="large" block>
+            <Button
+              htmlType="submit"
+              type="primary"
+              size="large"
+              block
+              loading={loadingIcon}
+            >
               {translate("submit")}
             </Button>
           </Form.Item>

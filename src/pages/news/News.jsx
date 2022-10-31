@@ -1,20 +1,22 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Button, Image, PageHeader, Popconfirm, Space, Table } from "antd";
 import { $authHost } from "../../http";
 import NewsDrawer from "../../components/drawers/NewsDrawer";
 import useLanguage from "../../hooks/useLanguage.js";
+import { LanguageContext } from "../../context/LanguageContext";
 
 function News() {
   const [data, setData] = useState([]);
   const [open, setOpen] = useState(false);
   const [editingData, setEditingData] = useState(null);
+  const { language } = useContext(LanguageContext);
 
   const translate = useLanguage();
 
   const columns = [
     {
       title: translate("title"),
-      dataIndex: "title",
+      dataIndex: language === "uz" ? "title" : "title_ru",
       key: 1,
     },
     {
@@ -25,7 +27,7 @@ function News() {
     },
     {
       title: translate("content"),
-      dataIndex: "content",
+      dataIndex: language === "uz" ? "content" : "content_ru",
       key: 4,
       render: (item) => {
         return <p>{item?.length > 40 ? item?.slice(0, 20) + "..." : item}</p>;
@@ -91,6 +93,7 @@ function News() {
         open={open}
         setOpen={setOpen}
         editingData={editingData}
+        setEditingData={setEditingData}
         getData={getData}
       />
       <Table columns={columns} dataSource={data} rowKey={(item) => item.id} />

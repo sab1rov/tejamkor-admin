@@ -1,33 +1,46 @@
 import { Button, Drawer, Form, Input, Tabs } from "antd";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { $authHost } from "../../http";
 import MediaUpload from "../MediaUpload";
 import useLanguage from "../../hooks/useLanguage.js";
 
-function CompanySliderDrawer({ open, setOpen, editingData, getData }) {
+function CompanySliderDrawer({
+  open,
+  setOpen,
+  editingData,
+  setEditingData,
+  getData,
+}) {
+  const [loadingIcon, setLoadingIcon] = useState(false);
   const [form] = Form.useForm();
-  const translate = useLanguage()
+  const translate = useLanguage();
 
   const onClose = () => {
     setOpen(false);
     form.resetFields();
+    setEditingData(null);
   };
 
   const postData = async (values) => {
-    await $authHost.post('/company/slider', values)
-    setOpen(false)
-    getData()
-  }
+    await $authHost.post("/company/slider", values);
+    setOpen(false);
+    getData();
+    setLoadingIcon(false);
+    form.resetFields();
+  };
 
   const editData = async (values) => {
-    let id = editingData.id
-    await $authHost.patch(`/company/slider/${id}`, values)
-    setOpen(false)
-    getData()
-  }
+    let id = editingData.id;
+    await $authHost.patch(`/company/slider/${id}`, values);
+    setOpen(false);
+    getData();
+    setLoadingIcon(false);
+    form.resetFields();
+  };
 
   const onFinish = async (values) => {
-    editingData ? editData(values) : postData(values)
+    setLoadingIcon(true);
+    editingData ? editData(values) : postData(values);
   };
 
   const TabOne = () => {
@@ -35,14 +48,14 @@ function CompanySliderDrawer({ open, setOpen, editingData, getData }) {
       <>
         <Form.Item
           name="title"
-          label={translate('title')}
+          label={translate("title")}
           rules={[
             {
               required: true,
             },
           ]}
         >
-          <Input placeholder={translate('title')}/>
+          <Input placeholder={translate("title")} />
         </Form.Item>
         <Form.Item
           name="title_ru"
@@ -53,7 +66,7 @@ function CompanySliderDrawer({ open, setOpen, editingData, getData }) {
             },
           ]}
         >
-          <Input placeholder={translate("title_ru")}/>
+          <Input placeholder={translate("title_ru")} />
         </Form.Item>
         <Form.Item
           name="subtitle"
@@ -64,7 +77,7 @@ function CompanySliderDrawer({ open, setOpen, editingData, getData }) {
             },
           ]}
         >
-          <Input placeholder={translate("subtitle")}/>
+          <Input placeholder={translate("subtitle")} />
         </Form.Item>
         <Form.Item
           name="subtitle_ru"
@@ -75,7 +88,7 @@ function CompanySliderDrawer({ open, setOpen, editingData, getData }) {
             },
           ]}
         >
-          <Input placeholder={translate("subtitle_ru")}/>
+          <Input placeholder={translate("subtitle_ru")} />
         </Form.Item>
       </>
     );
@@ -100,11 +113,11 @@ function CompanySliderDrawer({ open, setOpen, editingData, getData }) {
           label={translate("video")}
           rules={[
             {
-              required: true
-            }
+              required: true,
+            },
           ]}
         >
-          <Input placeholder={translate("link")}/>
+          <Input placeholder={translate("link")} />
         </Form.Item>
       </>
     );
@@ -113,21 +126,21 @@ function CompanySliderDrawer({ open, setOpen, editingData, getData }) {
   const tabItem = [
     {
       key: 1,
-      label: `${translate('title')}, ${translate("subtitle")}`,
+      label: `${translate("title")}, ${translate("subtitle")}`,
       children: <TabOne />,
     },
     {
       key: 2,
-      label: `${translate('image')}, ${translate("video")}`,
+      label: `${translate("image")}, ${translate("video")}`,
       children: <TabTwo />,
     },
   ];
 
   useEffect(() => {
-    if(Boolean(editingData)) {
-      form.setFieldsValue({...editingData, title: editingData.title})
+    if (Boolean(editingData)) {
+      form.setFieldsValue({ ...editingData, title: editingData.title });
     }
-  }, [editingData])
+  }, [editingData]);
 
   return (
     <>
@@ -135,7 +148,13 @@ function CompanySliderDrawer({ open, setOpen, editingData, getData }) {
         <Form form={form} onFinish={onFinish} layout="vertical">
           <Tabs items={tabItem} />
           <Form.Item>
-            <Button htmlType="submit" type="primary" size="large" block>
+            <Button
+              htmlType="submit"
+              type="primary"
+              size="large"
+              block
+              loading={loadingIcon}
+            >
               {translate("submit")}
             </Button>
           </Form.Item>

@@ -1,21 +1,22 @@
+import React, { useContext, useEffect, useState } from "react";
 import { Button, Image, PageHeader, Popconfirm, Space, Table } from "antd";
-import React, { useEffect, useState } from "react";
-import SliderDrawer from "../../components/drawers/SliderDrawer";
+import { LanguageContext } from "../../context/LanguageContext";
 import { $authHost } from "../../http";
 import useLanguage from "../../hooks/useLanguage.js";
-
+import SliderDrawer from "../../components/drawers/SliderDrawer";
 
 function Slider() {
   const [data, setData] = useState([]);
   const [open, setOpen] = useState(false);
   const [editingData, setEditingData] = useState(null);
+  const { language } = useContext(LanguageContext);
 
-  const translate = useLanguage()
+  const translate = useLanguage();
 
   const tableColumns = [
     {
       title: translate("title"),
-      dataIndex: "title",
+      dataIndex: language === "uz" ? "title" : "title_ru",
       key: 1,
     },
     {
@@ -26,7 +27,7 @@ function Slider() {
     },
     {
       title: translate("subtitle"),
-      dataIndex: "subtitle",
+      dataIndex: language === "uz" ? "subtitle" : "subtitle_ru",
       key: 2,
     },
     {
@@ -37,7 +38,7 @@ function Slider() {
           <>
             <Space direction="vertical">
               <Button type="link" onClick={() => editItem(item)}>
-                Edit
+                {translate("edit")}
               </Button>
               <Popconfirm
                 title="Are you sure to delete this company"
@@ -46,7 +47,7 @@ function Slider() {
                 cancelText="No"
               >
                 <Button type="text" danger>
-                  Delete
+                  {translate("delete")}
                 </Button>
               </Popconfirm>
             </Space>
@@ -67,9 +68,9 @@ function Slider() {
   };
 
   const deleteItem = async (item) => {
-    await $authHost.delete(`/slider/${item.id}`, item)
-    getData()
-  }
+    await $authHost.delete(`/slider/${item.id}`, item);
+    getData();
+  };
 
   useEffect(() => {
     getData();
@@ -81,7 +82,7 @@ function Slider() {
         className="site-page-header"
         extra={[
           <Button key="1" onClick={() => setOpen(true)}>
-            {translate('add')}
+            {translate("add")}
           </Button>,
         ]}
       />
@@ -95,6 +96,7 @@ function Slider() {
         setOpen={setOpen}
         getData={getData}
         editingData={editingData}
+        setEditingData={setEditingData}
       />
     </>
   );

@@ -1,19 +1,22 @@
+import React, { useEffect, useState } from "react";
 import { Button, Drawer, Form, Input, Tabs } from "antd";
-import React, { useEffect } from "react";
 import { $authHost } from "../../http";
 import MediaUpload from "../MediaUpload";
 import useLanguage from "../../hooks/useLanguage.js";
 
-function SliderDrawer({ open, setOpen, getData, editingData }) {
+function SliderDrawer({ open, setOpen, getData, editingData, setEditingData }) {
+  const [loadingIcon, setLoadingIcon] = useState(false);
   const [form] = Form.useForm();
-  const translate = useLanguage()
+  const translate = useLanguage();
 
   const onClose = () => {
     setOpen(false);
     form.resetFields();
+    setEditingData(null);
   };
 
   const onFinish = (values) => {
+    setLoadingIcon(true);
     editingData ? editData(values) : postData(values);
   };
 
@@ -21,12 +24,16 @@ function SliderDrawer({ open, setOpen, getData, editingData }) {
     await $authHost.post("/slider", values);
     setOpen(false);
     getData();
+    setLoadingIcon(false);
+    form.resetFields();
   };
 
   const editData = async (values) => {
     await $authHost.patch(`/slider/${editingData.id}`, values);
     setOpen(false);
     getData();
+    setLoadingIcon(false);
+    form.resetFields();
   };
 
   const FirstTab = () => {
@@ -95,8 +102,8 @@ function SliderDrawer({ open, setOpen, getData, editingData }) {
           <MediaUpload form={form} />
         </Form.Item>
         <Form.Item
-          name={translate("video")}
-          label="Video"
+          name="video"
+          label={translate("video")}
           rules={[
             {
               required: true,
@@ -134,7 +141,13 @@ function SliderDrawer({ open, setOpen, getData, editingData }) {
         <Form form={form} onFinish={onFinish} layout="vertical">
           <Tabs items={tabItem} />
           <Form.Item>
-            <Button htmlType="submit" block size="large" type="primary">
+            <Button
+              htmlType="submit"
+              block
+              size="large"
+              type="primary"
+              loading={loadingIcon}
+            >
               Submit
             </Button>
           </Form.Item>

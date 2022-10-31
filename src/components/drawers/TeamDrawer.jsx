@@ -1,33 +1,40 @@
+import React, { useEffect, useState } from "react";
 import { Button, Drawer, Form, Input } from "antd";
-import React, { useEffect } from "react";
 import { $authHost } from "../../http";
 import MediaUpload from "../MediaUpload";
 import useLanguage from "../../hooks/useLanguage.js";
 
-function TeamDrawer({ open, setOpen, getData, editingData }) {
+function TeamDrawer({ open, setOpen, getData, editingData, setEditingData }) {
+  const [loadingIcon, setLoadingIcon] = useState(false);
   const [form] = Form.useForm();
-  const translate = useLanguage()
+  const translate = useLanguage();
 
   const onClose = () => {
     setOpen(false);
     form.resetFields();
+    setEditingData(null);
   };
 
   const onFinish = (values) => {
-    editingData ? editData(values) : postData(values)
+    setLoadingIcon(true);
+    editingData ? editData(values) : postData(values);
   };
 
-  const postData = async(values) => {
-    await $authHost.post('/team', values)
-    setOpen(false)
-    getData()
-  }
+  const postData = async (values) => {
+    await $authHost.post("/team", values);
+    setOpen(false);
+    getData();
+    setLoadingIcon(false);
+    form.resetFields();
+  };
 
   const editData = async (values) => {
-    await $authHost.patch(`/team/${editingData.id}`, values)
-    setOpen(false)
-    getData()
-  }
+    await $authHost.patch(`/team/${editingData.id}`, values);
+    setOpen(false);
+    getData();
+    setLoadingIcon(false);
+    form.resetFields();
+  };
 
   const FormItems = () => {
     return (
@@ -41,7 +48,7 @@ function TeamDrawer({ open, setOpen, getData, editingData }) {
             },
           ]}
         >
-          <Input placeholder={translate("name")}/>
+          <Input placeholder={translate("name")} />
         </Form.Item>
         <Form.Item
           name="name_ru"
@@ -92,10 +99,10 @@ function TeamDrawer({ open, setOpen, getData, editingData }) {
   };
 
   useEffect(() => {
-    if(Boolean(editingData)){
-        form.setFieldsValue({...editingData, name: editingData.name})
+    if (Boolean(editingData)) {
+      form.setFieldsValue({ ...editingData, name: editingData.name });
     }
-  }, [editingData])
+  }, [editingData]);
 
   return (
     <>
@@ -103,7 +110,13 @@ function TeamDrawer({ open, setOpen, getData, editingData }) {
         <Form form={form} onFinish={onFinish} layout="vertical">
           <FormItems />
           <Form.Item>
-            <Button htmlType="submit" type="primary" size="large" block>
+            <Button
+              htmlType="submit"
+              type="primary"
+              size="large"
+              block
+              loading={loadingIcon}
+            >
               {translate("submit")}
             </Button>
           </Form.Item>

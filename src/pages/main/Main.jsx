@@ -1,11 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Routes, Route, useLocation, Link, Navigate } from "react-router-dom";
-import { sidebarData } from "../../utils/Data";
-import { publicRoutes } from "../../components/routes/Routes";
-import Logo from "../../assets/img/tejamkor__logo.svg";
 import { Layout, Menu, PageHeader, Select } from "antd";
 import { LanguageContext } from "../../context/LanguageContext";
 import useLanguage from "../../hooks/useLanguage";
+import { sidebarData } from "../../utils/Data";
+import { publicRoutes } from "../../components/routes/Routes";
+import Logo from "../../assets/img/tejamkor__logo.svg";
 
 const { Sider, Content } = Layout;
 const { Option } = Select;
@@ -55,7 +55,7 @@ function Main() {
                 onChange={handleLangChange}
               >
                 <Option value="uz">Uzbekcha</Option>
-                <Option value="ru">Ruscha</Option>
+                <Option value="ru">Русский</Option>
               </Select>
             }
           />

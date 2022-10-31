@@ -6,26 +6,27 @@ import { domain } from "../../utils/urls";
 import { userContext } from "../../context/UserContext";
 
 function Login() {
-  const { user, setUser } = useContext(userContext);
-  const [username, setUsername] = useState("");
-  const [pwd, setPwd] = useState("");
+  const { setUser } = useContext(userContext);
   const [loadingIcon, setLoadingIcon] = useState(false);
+  const [finishValues, setFinishValues] = useState(null);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    const response = await axios.post(`${domain}/admin/login`, {
-      username,
-      pwd,
-    });
+  const onFinish = async (values) => {
+    setLoadingIcon(true);
+    setFinishValues(values);
+    const response = await axios.post(`${domain}/admin/login`, values);
     const { data } = response.data;
-    const { tokens } = data;
-    localStorage.setItem("accessToken", tokens.accessToken);
-    localStorage.setItem("refreshToken", tokens.refreshToken);
-    localStorage.setItem("id", data.id);
-    localStorage.setItem("user", true);
+    const tokens = await data?.tokens;
+    if (Boolean(data)) {
+      localStorage.setItem("accessToken", tokens.accessToken);
+      localStorage.setItem("refreshToken", tokens.refreshToken);
+      localStorage.setItem("id", data.id);
+      localStorage.setItem("user", true);
 
-    setUser(true);
+      setUser(true);
+      setLoadingIcon(false);
+    } else {
+      setLoadingIcon(false);
+    }
   };
 
   return (
@@ -37,7 +38,7 @@ function Login() {
       }}
     >
       <Card
-        title="Kirish"
+        title="Login"
         style={{
           width: 300,
         }}
@@ -45,12 +46,12 @@ function Login() {
         <Form
           name="normal_login"
           className="login-form"
-          initialValues={{
-            remember: true,
-          }}
+          layout="vertical"
+          onFinish={onFinish}
         >
           <Form.Item
-            name="Login"
+            label="Login"
+            name="username"
             rules={[
               {
                 required: true,
@@ -59,14 +60,13 @@ function Login() {
             ]}
           >
             <Input
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
               prefix={<UserOutlined className="site-form-item-icon" />}
               placeholder="Login"
             />
           </Form.Item>
           <Form.Item
-            name="Parol"
+            label="Parol"
+            name="pwd"
             rules={[
               {
                 required: true,
@@ -76,17 +76,19 @@ function Login() {
           >
             <Input.Password
               prefix={<LockOutlined className="site-form-item-icon" />}
-              type="password"
               placeholder="Parol"
-              value={pwd}
-              onChange={(e) => setPwd(e.target.value)}
             />
           </Form.Item>
           <Form.Item>
             <Button
+              htmlType="submit"
               type="primary"
               loading={loadingIcon}
-              onClick={(e) => handleSubmit(e)}
+              onClick={() => {
+                if (Boolean(finishValues)) {
+                  setLoadingIcon(true);
+                }
+              }}
               block
             >
               Kirish
@@ -99,3 +101,8 @@ function Login() {
 }
 
 export default Login;
+
+// {
+//   username,
+//   pwd,
+// }

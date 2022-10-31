@@ -1,9 +1,9 @@
-import Login from "./pages/login/Login";
-import "antd/dist/antd.css";
-import Main from "./pages/main/Main";
-import { useContext } from "react";
-import { userContext } from "./context/UserContext";
+import React, { useContext } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
+import { userContext } from "./context/UserContext";
+import Login from "./pages/login/Login";
+import Main from "./pages/main/Main";
+import "antd/dist/antd.css";
 
 function App() {
   const { user } = useContext(userContext);
@@ -22,7 +22,7 @@ function App() {
   ) : (
     <>
       <Routes>
-        <Route path="/login" element={<Login />} exact />
+        <Route path="/login" element={<Login />} />
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </>

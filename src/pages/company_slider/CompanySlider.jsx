@@ -1,13 +1,15 @@
 import { Button, Image, PageHeader, Popconfirm, Space, Table } from "antd";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import CompanySliderDrawer from "../../components/drawers/CompanySliderDrawer";
 import { $authHost } from "../../http";
 import useLanguage from "../../hooks/useLanguage.js";
+import { LanguageContext } from "../../context/LanguageContext";
 
 function CompanySlider() {
   const [data, setData] = useState([]);
   const [open, setOpen] = useState(false);
   const [editingData, setEditingData] = useState(null);
+  const { language } = useContext(LanguageContext);
 
   const translate = useLanguage();
 
@@ -15,7 +17,7 @@ function CompanySlider() {
     {
       key: 1,
       title: translate("title"),
-      dataIndex: "title",
+      dataIndex: language === "uz" ? "title" : "title_ru",
     },
     {
       key: 3,
@@ -26,7 +28,7 @@ function CompanySlider() {
     {
       key: 2,
       title: translate("subtitle"),
-      dataIndex: "subtitle",
+      dataIndex: language === "uz" ? "subtitle" : "subtitle_ru",
       render: (item) => {
         return <p>{item?.length > 40 ? item?.slice(0, 20) + "..." : item}</p>;
       },
@@ -91,6 +93,7 @@ function CompanySlider() {
         open={open}
         setOpen={setOpen}
         editingData={editingData}
+        setEditingData={setEditingData}
         getData={getData}
       />
       <Table
